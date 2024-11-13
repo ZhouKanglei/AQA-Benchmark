@@ -11,11 +11,11 @@ Welcome to the AQA Benchmark repository. This repository contains the necessary 
 
 | Algorithm | Publisher | Paper | Supported Datasets |
 |-----------|-------------|------|-------------------|
-| [USDL/MUSDL](https://github.com/nzl-thu/MUSDL) | CVPR'20 | [arXiv](https://arxiv.org/abs/2006.07665) | 
-| [CoRe](https://github.com/yuxumin/CoRe) | ICCV'21 | [arXiv](https://arxiv.org/pdf/2108.07797) | 
-| [GDLT](https://github.com/xuangch/CVPR22_GDLT) | CVPR'22 | [pdf](https://openaccess.thecvf.com/content/CVPR2022/papers/Xu_Likert_Scoring_With_Grade_Decoupling_for_Long-Term_Action_Assessment_CVPR_2022_paper.pdf) | 
-| [HGCN](https://github.com/yuxumin/CoRe) | TCSVT'23 | [pdf](https://zhoukanglei.github.io/publication/hgcn_aqa/HGCN_AQA.pdf) | 
-| [CoFInAl](https://github.com/ZhouKanglei/CoFInAl_AQA) | IJCAI'24 | [arXiv](https://arxiv.org/abs/2404.13999) | 
+| [USDL/MUSDL](https://github.com/nzl-thu/MUSDL) | CVPR'20 | [arXiv](https://arxiv.org/abs/2006.07665) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
+| [CoRe](https://github.com/yuxumin/CoRe) | ICCV'21 | [arXiv](https://arxiv.org/pdf/2108.07797) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
+| [GDLT](https://github.com/xuangch/CVPR22_GDLT) | CVPR'22 | [pdf](https://openaccess.thecvf.com/content/CVPR2022/papers/Xu_Likert_Scoring_With_Grade_Decoupling_for_Long-Term_Action_Assessment_CVPR_2022_paper.pdf) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
+| [HGCN](https://github.com/yuxumin/CoRe) | TCSVT'23 | [pdf](https://zhoukanglei.github.io/publication/hgcn_aqa/HGCN_AQA.pdf) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
+| [CoFInAl](https://github.com/ZhouKanglei/CoFInAl_AQA) | IJCAI'24 | [arXiv](https://arxiv.org/abs/2404.13999) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
 
 ## 📂 Repository Structure
 
@@ -24,9 +24,12 @@ The repository is organized as follows:
 ```
 AQA-benchmark/
 ├── data/                   # Contains the datasets used for benchmarking
-├── scripts/                # Includes scripts for data preprocessing, training, and evaluation
+├── scripts/                # Includes scripts for training and evaluation examples
 ├── models/                 # Directory for storing model architectures and checkpoints
-├── results/                # Stores the results of the benchmark evaluations
+├── outputs/                # Stores the results of the benchmark evaluations
+├── datasets/               # Contains all the datasets used in the project
+├── criterion/              # Includes the criteria or loss functions used in the project
+├── utils/                  # Holds utility scripts and helper functions
 ├── README.md               # This file, providing an overview of the repository
 ```
 
