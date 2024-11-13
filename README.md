@@ -47,11 +47,8 @@ AQA-benchmark/
 3. **Prepare Data**:
     Place your datasets in a proper directory. You may need to change the data path for the configs provided in the `./configs` directory.
 
-4. **Download I3D Pre-Trained Weight**    
-You can download the I3D pre-trained weights from the following link:
-[I3D Pre-Trained Weights](https://github.com/hassony2/kinetics_i3d_pytorch/blob/master/model/model_rgb.pth)
-
-After downloading, place the weights in the `./weights` directory.
+4. **Download I3D Pre-Trained Weight**:
+    You can download the I3D pre-trained weights from the following link: [I3D Pre-Trained Weight](https://github.com/hassony2/kinetics_i3d_pytorch/blob/master/model/model_rgb.pth). After downloading, place the weight in the `./weights` directory.
 
 5. **Train Models**:
     Use the training scripts in the `/scripts` directory to train your models. For example:
