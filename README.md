@@ -34,7 +34,7 @@ AQA-benchmark/
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/yourusername/AQA-benchmark.git
+    git clone https://github.com/ZhouKanglei/AQA-Benchmark
     cd AQA-benchmark
     ```
 
@@ -51,7 +51,7 @@ AQA-benchmark/
     You can download the I3D pre-trained weights from the following link: [I3D Pre-Trained Weight](https://github.com/hassony2/kinetics_i3d_pytorch/blob/master/model/model_rgb.pth). After downloading, place the weight in the `./weights` directory.
 
 5. **Train Models**:
-    Use the training scripts in the `/scripts` directory to train your models. For example:
+    Use the training scripts in the `./scripts` directory to train your models. For example:
     ```bash
     python main.py \
         --config configs/{your config}.yaml \
