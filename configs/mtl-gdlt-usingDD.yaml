@@ -17,7 +17,7 @@ test_batch_size_per_gpu: 4
 num_workers: 4
 
 # model
-model: aqa
+model: gdlt_aqa
 
 backbone: i3d
 backbone_args:
@@ -34,7 +34,7 @@ head_args:
   n_encoder: 1
   n_decoder: 2
   n_query: 4
-  dropout: 0
+  score_range: 30 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
 
 # training
 optimizer: adam
@@ -49,4 +49,7 @@ gpus: [0, 1]
 fix_bn: True
 
 # loss
-criterion: mse
+criterion: gdlt_loss
+criterion_args:
+  alpha: 1.0
+  margin: 1.0

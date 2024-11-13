@@ -6,6 +6,7 @@
 from .aqa import AQA as aqa
 from .musdl_aqa import MUSDL_AQA as musdl_aqa
 from .core_aqa import CORE_AQA as core_aqa
+from .gdlt_aqa import GDLT_AQA as gdlt_aqa
 
 # backbone
 from .backbone.i3d import I3D as i3d

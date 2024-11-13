@@ -13,7 +13,6 @@ import yaml
 from thop import profile
 
 from utils.logger import Logger
-from utils.losses import Criterion
 from utils.misc import copy_dir, count_param, init_seed, worker_init_fn
 
 
@@ -294,7 +293,8 @@ class Processor(object):
         self.logger.info("Build criterion:", level=1)
         self.logger.info(f"- Criterion: {self.args.criterion}")
 
-        self.criterion = Criterion(self.args)
+        criterion = locate("criterion." + self.args.criterion)
+        self.criterion = criterion(self.args)
 
     def save_model_weight(self, weight_name="w", dict=None):
         """

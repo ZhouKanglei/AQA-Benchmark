@@ -2,11 +2,9 @@
 # -*- coding: utf-8 -*-
 # @Time: 2024/11/13 16:52:45
 
-from torch import nn
 import torch
-import torch.nn.functional as F
-import numpy as np
-import copy
+import torch.nn as nn
+
 from ..utils.transformer import Transformer
 
 
@@ -29,7 +27,8 @@ class GDLT(nn.Module):
         n_encoder=1,
         n_decoder=2,
         n_query=4,
-        dropout=0.3,
+        score_range=1,
+        dropout=0,
     ):
         super(GDLT, self).__init__()
         self.in_proj = nn.Sequential(
@@ -52,8 +51,10 @@ class GDLT(nn.Module):
 
         self.prototype = nn.Embedding(n_query, hidden_dim)
 
-        self.weight = torch.linspace(0, 1, n_query, requires_grad=False)
         self.regressor = nn.Linear(hidden_dim, n_query)
+
+        # score range
+        self.weight = torch.linspace(0, score_range, n_query, requires_grad=False)
 
     def forward(self, x):
         self.weight = self.weight.to(x.device)
@@ -73,4 +74,4 @@ class GDLT(nn.Module):
 
         if len(out.shape) > 1:
             out = out.squeeze()
-        return out
+        return out, q1

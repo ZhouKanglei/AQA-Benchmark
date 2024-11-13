@@ -3,16 +3,17 @@
 # @Time: 2024/11/10 19:33:13
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 
 class kld(nn.Module):
-    def __init__(self):
+    def __init__(self, args):
         super(kld, self).__init__()
 
         self.criterion = nn.KLDivLoss(reduction="batchmean")
 
-    def forward(self, preds, targets):
+    def forward(self, outputs):
+        preds = outputs["loss_preds"]
+        targets = outputs["loss_labels"]
         # Preds are alreadly in probability form and ensure preds are in log form
         preds_log_prob = torch.log(preds).reshape(-1, preds.size(-1))
         # The targets is already in probability form
@@ -22,8 +23,10 @@ class kld(nn.Module):
 
 
 class nll_mse(nn.Module):
-    def __init__(self, depth):
+    def __init__(self, args):
         super(nll_mse, self).__init__()
+
+        depth = args.head_args["depth"]
         self.num_leaf = 2 ** (depth - 1)
 
         self.nll = nn.NLLLoss()
@@ -57,6 +60,19 @@ class nll_mse(nn.Module):
                 )
 
         return loss
+
+
+class mse(nn.Module):
+    def __init__(self, args):
+        super(mse, self).__init__()
+
+        self.criterion = nn.MSELoss()
+
+    def forward(self, outputs):
+        preds = outputs["loss_preds"]
+        targets = outputs["loss_labels"]
+
+        return self.criterion(preds, targets)
 
 
 class Criterion(nn.Module):
