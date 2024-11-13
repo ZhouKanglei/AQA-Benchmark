@@ -47,7 +47,13 @@ AQA-benchmark/
 3. **Prepare Data**:
     Place your datasets in a proper directory. You may need to change the data path for the configs provided in the `./configs` directory.
 
-4. **Train Models**:
+4. **Download I3D Pre-Trained Weight**    
+You can download the I3D pre-trained weights from the following link:
+[I3D Pre-Trained Weights](https://github.com/hassony2/kinetics_i3d_pytorch/blob/master/model/model_rgb.pth)
+
+After downloading, place the weights in the `./weights` directory.
+
+5. **Train Models**:
     Use the training scripts in the `/scripts` directory to train your models. For example:
     ```bash
     python main.py \
@@ -57,7 +63,7 @@ AQA-benchmark/
         --phase {train/test, default is train}
     ```
 
-5. **Evaluate Models**:
+6. **Evaluate Models**:
     After training, evaluate your models using the evaluation scripts:
     ```bash
     python main.py \
@@ -67,7 +73,7 @@ AQA-benchmark/
         --phase {train/test, default is train}
     ```
 
-6. **View Results**:
+7. **View Results**:
     The results of your evaluations will be stored in the `./outputs/config_name/exp_name` directory. You can analyze and visualize these results as needed.
 
 ## 🤝 Contributing
