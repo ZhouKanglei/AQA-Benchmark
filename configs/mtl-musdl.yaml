@@ -1,0 +1,49 @@
+
+# data
+dataset: mtl
+data_root: /home/contlrn/zkl/Data/AQA/MTL-AQA/new
+label_path: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/augmented_final_annotations_dict.pkl
+train_split: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/train_split_0.pkl
+test_split: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/test_split_0.pkl
+
+frame_length: 103
+temporal_shift: [-3, 3]
+
+# dataloader
+train_batch_size_per_gpu: 4
+test_batch_size_per_gpu: 4
+num_workers: 4
+
+std: 5
+
+judge_max: 10.0
+judge_min: 0.0
+
+# model
+model: musdl_aqa
+
+backbone: i3d
+backbone_args:
+  pretrained_path: weights/model_rgb.pth
+
+neck: avg
+neck_args: null
+
+head: musdl
+head_args:
+  num_judges: 7 # 1 for USDL, 7 for MUSDL
+
+# training
+optimizer: adam
+base_lr: 0.0001
+lr_factor: 1.0
+weight_decay: 0.00001
+
+scheduler: null
+
+epoch: 100
+gpus: [0, 1]
+fix_bn: False
+
+# loss
+criterion: kld
