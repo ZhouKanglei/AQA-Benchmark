@@ -3,6 +3,8 @@ import os
 import numpy as np
 import torch
 
+import torch.nn.functional as F
+
 
 def get_padding_shape(filter_shape, stride):
     def _pad_top_bottom(filter_dim, stride_val):
@@ -240,12 +242,15 @@ class I3D(torch.nn.Module):
             use_bn=False,
         )
         self.softmax = torch.nn.Softmax(1)
-        # self.softmax = torch.nn.Sigmiod(1)
+
+        self.output = {}
 
     def get_logits_dim(self):
         return 1024
 
     def forward(self, inp):
+        output = {}
+
         # Preprocessing
         out = self.conv3d_1a_7x7(inp)
         out = self.maxPool3d_2a_3x3(out)
@@ -255,15 +260,25 @@ class I3D(torch.nn.Module):
         out = self.mixed_3b(out)
         out = self.mixed_3c(out)
         out = self.maxPool3d_4a_3x3(out)
+
         out = self.mixed_4b(out)
         out = self.mixed_4c(out)
         out = self.mixed_4d(out)
         out = self.mixed_4e(out)
         out = self.mixed_4f(out)
+
         out = self.maxPool3d_5a_2x2(out)
+        output["out1"] = out
         out = self.mixed_5b(out)
+        output["out2"] = out
         out = self.mixed_5c(out)
+        output["out3"] = out
+
         feature = self.avg_pool(out)
+        output["feature"] = feature
+
+        self.output = output
+
         return feature
         # out = self.dropout(feature)
         # out = self.conv3d_0c_1x1(out)
@@ -274,6 +289,29 @@ class I3D(torch.nn.Module):
         # out = self.softmax(out_logits)
         # # out = self.sigmoid(out_logits)  # B * C
         # return feature, out, out_logits
+
+    def feature_pyramid_fusion(self, x):
+        self.forward(x)
+
+        features = self.output
+        out1 = features["out1"]
+        out1 = F.adaptive_avg_pool3d(out1, (1, 1, 1)).squeeze()
+        out2 = features["out2"]
+        out2 = F.adaptive_avg_pool3d(out2, (1, 1, 1)).squeeze()
+        out3 = features["out3"]
+        out3 = F.adaptive_avg_pool3d(out3, (1, 1, 1)).squeeze()
+
+        # out2 -> out3: shape is b, c - > b, c2
+        out2 = F.interpolate(
+            out2.unsqueeze(1), size=(out3.size(1)), mode="linear", align_corners=True
+        ).squeeze(1)
+        # out1 -> out3: shape is b, c - > b, c3
+        out1 = F.interpolate(
+            out1.unsqueeze(1), size=(out3.size(1)), mode="linear", align_corners=True
+        ).squeeze(1)
+
+        out = out1 + out2 + out3
+        return out
 
     def load_tf_weights(self, sess):
         state_dict = {}

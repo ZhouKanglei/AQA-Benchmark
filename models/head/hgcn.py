@@ -262,7 +262,7 @@ class HGCN(nn.Module):
         self,
         in_channels=1024,
         out_channels=1,
-        num_groups=4,
+        num_groups=8,
         num_clips=10,
         num_scenes=7,
         num_k=3,
@@ -334,9 +334,8 @@ class HGCN(nn.Module):
         v = self.mot_agg(scene)  # video-level representation
 
         mu, std, esp = self.reparameter(v)
-        scores = (
-            mu + std * esp if self.training else mu
-        )  # score prediction for deterministic inference
+        scores = mu + std * esp
+
         out = scores.mean(-1) * self.num_scenes
 
         if len(out.shape) > 1:

@@ -23,7 +23,7 @@ class DAE(nn.Module):
     def reparametrization(self, mu, logvar):
         std = logvar.mul(0.5).exp_()
         esp = torch.randn(*mu.size()).to(mu.device)
-        z = mu + std * esp if self.training else mu
+        z = mu + std * esp
         return z
 
     def forward(self, x):

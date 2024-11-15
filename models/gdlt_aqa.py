@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # @Time: 2024/11/13 20:49:50
 
-import torch
-import torch.nn as nn
 
 from .aqa import AQA
 
