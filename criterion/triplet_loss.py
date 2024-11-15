@@ -118,7 +118,7 @@ def _pairwise_distance(x, squared=False, eps=1e-16):
 def _get_anchor_positive_triplet_mask(labels):
     # Return a 2D mask where mask[a, p] is True iff a and p are distinct and have same label.
 
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = labels.device
 
     indices_not_equal = torch.eye(labels.shape[0]).to(device).byte() ^ 1
 

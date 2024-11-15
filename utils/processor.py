@@ -284,7 +284,12 @@ class Processor(object):
         else:
             raise NotImplementedError()
 
-        self.scheduler = None
+        self.scheduler = torch.optim.lr_scheduler.OneCycleLR(
+            self.optimizer,
+            max_lr=[0.0091, 0.001, 0.001],
+            total_steps=self.args.epoch * len(self.train_loader),
+            verbose=False,
+        )
 
     def build_criterion(self):
         """

@@ -4,3 +4,4 @@
 
 from .losses import kld, nll_mse, mse
 from .gdlt_loss import gdlt_loss
+from .cofinal_loss import cofinal_loss

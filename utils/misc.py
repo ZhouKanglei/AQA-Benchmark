@@ -66,6 +66,8 @@ def get_video_trans(phase="train"):
         [
             video_transforms.RandomHorizontalFlip(),
             video_transforms.Resize((455, 256)),
+            video_transforms.RandomRotation(10),
+            video_transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1),
             video_transforms.RandomCrop(224),
             volume_transforms.ClipToTensor(),
             video_transforms.Normalize(
