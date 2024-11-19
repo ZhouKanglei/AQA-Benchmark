@@ -11,11 +11,11 @@ Welcome to the AQA Benchmark repository. This repository contains the necessary 
 
 | Algorithm | Publisher | Paper | Supported Datasets |
 |-----------|-------------|------|-------------------|
-| [USDL/MUSDL](https://github.com/nzl-thu/MUSDL) | CVPR'20 | [arXiv](https://arxiv.org/abs/2006.07665) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
-| [CoRe](https://github.com/yuxumin/CoRe) | ICCV'21 | [arXiv](https://arxiv.org/pdf/2108.07797) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
-| [GDLT](https://github.com/xuangch/CVPR22_GDLT) | CVPR'22 | [pdf](https://openaccess.thecvf.com/content/CVPR2022/papers/Xu_Likert_Scoring_With_Grade_Decoupling_for_Long-Term_Action_Assessment_CVPR_2022_paper.pdf) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
-| [HGCN](https://github.com/yuxumin/CoRe) | TCSVT'23 | [pdf](https://zhoukanglei.github.io/publication/hgcn_aqa/HGCN_AQA.pdf) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
-| [CoFInAl](https://github.com/ZhouKanglei/CoFInAl_AQA) | IJCAI'24 | [arXiv](https://arxiv.org/abs/2404.13999) | [MTL-AQA](https://github.com/yuxumin/CoRe) |
+| [USDL/MUSDL](https://github.com/nzl-thu/MUSDL) | CVPR'20 | [arXiv](https://arxiv.org/abs/2006.07665) | [MTL-AQA](https://github.com/ParitoshParmar/MTL-AQA), [FineDiving](https://github.com/xujinglin/FineDiving) |
+| [CoRe](https://github.com/yuxumin/CoRe) | ICCV'21 | [arXiv](https://arxiv.org/pdf/2108.07797) | [MTL-AQA](https://github.com/ParitoshParmar/MTL-AQA), [FineDiving](https://github.com/xujinglin/FineDiving) |
+| [GDLT](https://github.com/xuangch/CVPR22_GDLT) | CVPR'22 | [pdf](https://openaccess.thecvf.com/content/CVPR2022/papers/Xu_Likert_Scoring_With_Grade_Decoupling_for_Long-Term_Action_Assessment_CVPR_2022_paper.pdf) | [MTL-AQA](https://github.com/ParitoshParmar/MTL-AQA), [FineDiving](https://github.com/xujinglin/FineDiving) |
+| [HGCN](https://github.com/yuxumin/CoRe) | TCSVT'23 | [pdf](https://zhoukanglei.github.io/publication/hgcn_aqa/HGCN_AQA.pdf) | [MTL-AQA](https://github.com/yuxumin/CoRe), [FineDiving](https://github.com/xujinglin/FineDiving) |
+| [CoFInAl](https://github.com/ZhouKanglei/CoFInAl_AQA) | IJCAI'24 | [arXiv](https://arxiv.org/abs/2404.13999) | [MTL-AQA](https://github.com/ParitoshParmar/MTL-AQA), [FineDiving](https://github.com/xujinglin/FineDiving) |
 
 ## 📂 Repository Structure
 
@@ -51,7 +51,7 @@ AQA-benchmark/
     Place your datasets in a proper directory. You may need to change the data path for the configs provided in the `./configs` directory.
 
 4. **Download I3D Pre-Trained Weight**:
-    You can download the I3D pre-trained weights from the following link: [I3D Pre-Trained Weight](https://github.com/hassony2/kinetics_i3d_pytorch/blob/master/model/model_rgb.pth). After downloading, place the weight in the `./weights` directory.
+    You can download the I3D pre-trained weight from the following link: [I3D Pre-Trained Weight](https://github.com/hassony2/kinetics_i3d_pytorch/blob/master/model/model_rgb.pth). After downloading, place the weight in the `./weights` directory.
 
 5. **Train Models**:
     Use the training scripts in the `./scripts` directory to train your models. For example:
