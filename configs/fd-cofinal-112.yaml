@@ -1,15 +1,18 @@
 
 # data
-dataset: mtl
-data_root: /home/contlrn/zkl/Data/AQA/MTL-AQA/new
-label_path: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/augmented_final_annotations_dict.pkl
-train_split: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/train_split_0.pkl
-test_split: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/test_split_0.pkl
+dataset: fd
+data_root: /home/contlrn/zkl/Data/AQA/FineDiving/FINADiving_MTL_256s
+label_path: /home/contlrn/zkl/Data/AQA/FineDiving/Annotations/fine-grained_annotation_aqa.pkl
+train_split: /home/contlrn/zkl/Data/AQA/FineDiving/Annotations/train_split.pkl
+test_split: /home/contlrn/zkl/Data/AQA/FineDiving/Annotations/test_split.pkl
 
-frame_length: 103
-temporal_shift: [-3, 3]
+frame_length: 96
+resolution: 112
 
 usingDD: True
+dive_number_choosing: True
+
+start_frame_idx: [0, 10, 20, 30, 40, 50, 60, 70, 80]
 
 # dataloader
 train_batch_size_per_gpu: 4
@@ -31,9 +34,9 @@ head_args:
   n_decoder: 2
   n_query: 4
   score_range: 30 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
-  first_etf_num: 10
-  second_etf_num: 100
-  using_neg: False
+  first_etf_num: 100
+  second_etf_num: 0
+  using_neg: True
 
 # training
 optimizer: adam
@@ -45,7 +48,7 @@ scheduler: null
 
 epoch: 100
 gpus: [0, 1]
-fix_bn: True
+fix_bn: False
 
 # loss
 criterion: cofinal_loss

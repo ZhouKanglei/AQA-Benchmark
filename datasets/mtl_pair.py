@@ -15,6 +15,9 @@ from utils.misc import get_video_trans
 class MTL_PAIR(torch.utils.data.Dataset):
 
     def __init__(self, args, subset="train"):
+        # seed
+        random.seed(args.seed)
+        # init
         self.args = args
         self.phase = args.phase if subset is None else subset
         args.logger.info(f"- {self.phase} dataset loading")
@@ -216,11 +219,13 @@ class MTL_PAIR(torch.utils.data.Dataset):
                 train_file_list = self.choose_list
                 random.shuffle(train_file_list)
                 choosen_sample_list = train_file_list[: self.voter_number]
-                
-            # if choosen_sample_list is less than the number of voters, then repeat choosing 
+
+            # if choosen_sample_list is less than the number of voters, then repeat choosing
             while len(choosen_sample_list) < self.voter_number:
                 random.shuffle(train_file_list)
-                choosen_sample_list += train_file_list[: self.voter_number - len(choosen_sample_list)]
+                choosen_sample_list += train_file_list[
+                    : self.voter_number - len(choosen_sample_list)
+                ]
 
             data["target_video"] = []
             data["target_score"] = []
