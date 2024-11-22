@@ -9,6 +9,8 @@ test_split: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/test_split_0.pkl
 frame_length: 103
 temporal_shift: [-3, 3]
 
+usingDD: False
+
 # dataloader
 train_batch_size_per_gpu: 4
 test_batch_size_per_gpu: 4

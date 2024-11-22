@@ -34,9 +34,9 @@ head_args:
   n_decoder: 2
   n_query: 4
   score_range: 30 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
-  first_etf_num: 100
-  second_etf_num: 0
-  using_neg: True
+  first_etf_num: 10
+  second_etf_num: 100
+  using_neg: False
 
 # training
 optimizer: adam

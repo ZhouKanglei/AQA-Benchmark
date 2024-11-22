@@ -112,10 +112,25 @@ class ParseArgs(object):
             action=cmdAction,
         )
         parser.add_argument(
+            "--pre_train",
+            type=str2bool,
+            default=False,
+            help="pre-training from the pre-trained checkpoint",
+            action=cmdAction,
+        )
+        parser.add_argument(
             "--continue_train",
             type=str2bool,
             default=False,
             help="continue training from the saved checkpoint",
+            action=cmdAction,
+        )
+        parser.add_argument(
+            "--class_idx",
+            type=int,
+            default=1,
+            help="only for the AQA-7 dataset",
+            choices=[1, 2, 3, 4, 5, 6],
             action=cmdAction,
         )
 

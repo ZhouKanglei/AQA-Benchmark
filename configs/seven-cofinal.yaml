@@ -1,0 +1,56 @@
+
+# data
+# data
+dataset: seven
+data_root: /home/contlrn/zkl/Data/AQA/AQA-7
+train_split: /home/contlrn/zkl/Data/AQA/AQA-7/Split_4/split_4_train_list.mat
+test_split: /home/contlrn/zkl/Data/AQA/AQA-7/Split_4/split_4_test_list.mat
+
+frame_length: 103
+temporal_shift: [-3, 3]
+
+score_range: 100
+class_idx: 1
+
+# dataloader
+train_batch_size_per_gpu: 4
+test_batch_size_per_gpu: 4
+num_workers: 4
+
+# model
+model: cofinal_aqa
+
+backbone: i3d
+backbone_args:
+  pretrained_path: weights/model_rgb.pth
+
+neck: null
+neck_args: null
+
+head: cofinal
+head_args: 
+  n_decoder: 2
+  n_query: 4
+  score_range: 100 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
+  first_etf_num: 10
+  second_etf_num: 100
+  using_neg: False
+
+# training
+optimizer: adam
+base_lr: 0.0001
+lr_factor: 1.0
+weight_decay: 0.00001
+
+scheduler: null
+
+epoch: 100
+gpus: [0, 1]
+fix_bn: True
+
+# loss
+criterion: cofinal_loss
+criterion_args:
+  alpha: 1.0
+  margin: 1.0
+  loss_align: 1

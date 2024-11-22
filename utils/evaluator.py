@@ -62,6 +62,9 @@ class Evaluator(object):
         pred_scores = np.array(pred_scores)
         true_scores = np.array(true_scores)
         rho, p = stats.spearmanr(pred_scores, true_scores)
+
+        rho = 0 if rho is np.nan else rho
+
         L2 = np.power(pred_scores - true_scores, 2).sum() / true_scores.shape[0]
         RL2 = (
             np.power(

@@ -3,6 +3,7 @@
 # @Time: 2024/11/09 11:22:18
 
 import csv
+from datetime import datetime
 import os
 from pydoc import locate
 
@@ -80,6 +81,10 @@ class Processor(object):
             if "backbone" not in model and args_str != "":
                 self.exp_name += f"'{args_str}"
 
+        # pre-train
+        if self.args.pre_train:
+            self.exp_name = self.exp_name + "-pt"
+        # suffix
         if self.args.exp_name is not None:
             self.exp_name += "-" + self.args.exp_name
         else:
@@ -87,7 +92,15 @@ class Processor(object):
 
         # work directory: outputs + dataset + experiment name
         self.config_name = os.path.basename(self.args.config).split(".")[0]
+        if "seven" in self.config_name:
+            self.config_name = self.config_name.replace(
+                "seven", f"seven{self.args.class_idx}"
+            )
+        else:
+            self.config_name = self.config_name + f"_{self.args.class_idx}"
+
         self.work_dir = f"{self.args.output_dir}/{self.config_name}/{self.exp_name}"
+
         os.makedirs(self.work_dir, exist_ok=True)
 
         # weight save directory
@@ -424,6 +437,15 @@ class Processor(object):
 
         self.logger.info(f"- Inference time: {self.infer_time:10.6f} s")
         self.logger.info(f"- Infer time std: {self.infer_time_std:10.6f} s")
+
+        if self.args.phase == "train":
+            ending_time = datetime.now().strftime("%y%m%d-%H%M%S")
+            train_time = datetime.strptime(
+                ending_time, "%y%m%d-%H%M%S"
+            ) - datetime.strptime(self.args.timestamp, "%y%m%d-%H%M%S")
+            train_time = train_time.total_seconds() / 3600
+
+            self.logger.info(f"-  Training time: {train_time:6.2f} hours")
 
         self.save_inference_result()
 

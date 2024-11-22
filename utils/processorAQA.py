@@ -150,7 +150,13 @@ class ProcessorAQA(Processor):
             )
             if self.args.continue_train:
                 self.load_model_weight(weight_path=self.args.weight_path)
+            if self.args.pre_train:
+                self.load_model_weight(weight_path=self.args.weight_path)
             self.train(start_epoch=epoch)
-        # load the best model and test
-        self.load_model_weight(weight_path=self.args.weight_path)
-        self.test()
+            # load the best model and test
+            self.load_model_weight()
+            self.test()
+        else:
+            # load the best model and test
+            self.load_model_weight()
+            self.test()
