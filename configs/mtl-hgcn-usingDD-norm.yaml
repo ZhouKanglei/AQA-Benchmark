@@ -11,6 +11,9 @@ temporal_shift: [-3, 3]
 
 usingDD: True
 
+norm_score: True
+score_range: 30
+
 # dataloader
 train_batch_size_per_gpu: 2
 test_batch_size_per_gpu: 2
@@ -28,7 +31,7 @@ neck_args: null
 
 head: hgcn
 head_args: 
-  num_groups: 8
+  num_groups: 4
 
 # training
 optimizer: adam

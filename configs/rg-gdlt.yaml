@@ -5,7 +5,6 @@ train_split: /home/contlrn/zkl/Data/AQA/VST/RG/train.txt
 test_split: /home/contlrn/zkl/Data/AQA/VST/RG/test.txt
 
 clip_num: 68
-class_idx: 1
 score_type: Total_Score
 
 # dataloader
@@ -14,35 +13,37 @@ test_batch_size_per_gpu: 1
 num_workers: 4
 
 # model
-model: core_aqa
+model: gdlt_aqa
 
 backbone: null
 backbone_args: null
 
-neck: avg
+neck: null
 neck_args: null
 
-head: core
+head: gdlt
 head_args: 
-  in_channel: 2049
-  hidden_channel: 256
-  depth: 5
-
-score_range: 30
-voter_number: 10
+  in_dim: 1024
+  hidden_dim: 256
+  n_head: 1
+  n_encoder: 1
+  n_decoder: 2
+  n_query: 4
+  score_range: 30 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
 
 # training
 optimizer: adam
 base_lr: 0.0001
 lr_factor: 1.0
-weight_decay: 0.0001
-momentum: 0.8
+weight_decay: 0.00001
 
-scheduler: cos
+scheduler: null
 
 epoch: 100
 gpus: [0, 1]
-fix_bn: False
 
 # loss
-criterion: kld
+criterion: gdlt_loss
+criterion_args:
+  alpha: 1.0
+  margin: 1.0

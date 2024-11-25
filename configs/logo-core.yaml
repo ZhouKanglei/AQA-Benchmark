@@ -1,0 +1,46 @@
+# data
+dataset: logo_pair
+data_root: /home/contlrn/zkl/Data/AQA/LOGO/logo_feats
+label_path: /home/contlrn/zkl/Data/AQA/LOGO/info/anno_dict.pkl
+formation_path: /home/contlrn/zkl/Data/AQA/LOGO/info/formation_dict.pkl
+train_split: /home/contlrn/zkl/Data/AQA/LOGO/info/train_split3.pkl
+test_split: /home/contlrn/zkl/Data/AQA/LOGO/info/test_split3.pkl
+
+voter_number: 10
+score_range: 100
+
+# dataloader
+train_batch_size_per_gpu: 4
+test_batch_size_per_gpu: 1
+num_workers: 4
+
+# model
+model: core_aqa
+
+backbone: null
+backbone_args: null
+
+neck: avg
+neck_args: null
+
+head: core
+head_args: 
+  in_channel: 2049
+  hidden_channel: 256
+  depth: 5
+
+# training
+optimizer: adam
+base_lr: 0.0001
+lr_factor: 1.0
+weight_decay: 0.0001
+momentum: 0.8
+
+scheduler: null
+
+epoch: 100
+gpus: [0, 1]
+fix_bn: False
+
+# loss
+criterion: nll_mse

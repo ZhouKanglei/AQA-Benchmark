@@ -10,6 +10,8 @@ frame_length: 103
 temporal_shift: [-3, 3]
 
 usingDD: True
+norm_score: True
+score_range: 30
 
 # dataloader
 train_batch_size_per_gpu: 4
@@ -30,10 +32,12 @@ head: cofinal
 head_args: 
   n_decoder: 2
   n_query: 4
-  score_range: 30 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
-  first_etf_num: 10
-  second_etf_num: 100
-  using_neg: False
+  dropout: 0.1
+  first_etf_num: 100
+  etf_vec_dim: 100
+  hidden_dim: 256
+  activate_type: 2
+  using_neg: True
 
 # training
 optimizer: adam

@@ -1,0 +1,49 @@
+# data
+dataset: fisv
+data_root: /home/contlrn/zkl/Data/AQA/VST/fis-v/swintx_avg_fps25_clip32
+train_split: /home/contlrn/zkl/Data/AQA/VST/fis-v/train.txt
+test_split: /home/contlrn/zkl/Data/AQA/VST/fis-v/test.txt
+
+clip_num: 68
+score_type: Total_Score
+
+# dataloader
+train_batch_size_per_gpu: 32
+test_batch_size_per_gpu: 1
+num_workers: 4
+
+# model
+model: gdlt_aqa
+
+backbone: null
+backbone_args: null
+
+neck: null
+neck_args: null
+
+head: gdlt
+head_args: 
+  in_dim: 1024
+  hidden_dim: 256
+  n_head: 1
+  n_encoder: 1
+  n_decoder: 2
+  n_query: 4
+  score_range: 30 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
+
+# training
+optimizer: adam
+base_lr: 0.0001
+lr_factor: 1.0
+weight_decay: 0.00001
+
+scheduler: null
+
+epoch: 100
+gpus: [0, 1]
+
+# loss
+criterion: gdlt_loss
+criterion_args:
+  alpha: 1.0
+  margin: 1.0

@@ -1,0 +1,49 @@
+# data
+dataset: logo
+data_root: /home/contlrn/zkl/Data/AQA/LOGO/logo_feats
+label_path: /home/contlrn/zkl/Data/AQA/LOGO/info/anno_dict.pkl
+formation_path: /home/contlrn/zkl/Data/AQA/LOGO/info/formation_dict.pkl
+train_split: /home/contlrn/zkl/Data/AQA/LOGO/info/train_split3.pkl
+test_split: /home/contlrn/zkl/Data/AQA/LOGO/info/test_split3.pkl
+
+
+# dataloader
+train_batch_size_per_gpu: 4
+test_batch_size_per_gpu: 1
+num_workers: 4
+
+# model
+model: gdlt_aqa
+
+backbone: null
+backbone_args: null
+
+neck: null
+neck_args: null
+
+head: gdlt
+head_args: 
+  in_dim: 1024
+  hidden_dim: 256
+  n_head: 1
+  n_encoder: 1
+  n_decoder: 2
+  n_query: 4
+  score_range: 100 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
+
+# training
+optimizer: adam
+base_lr: 0.0001
+lr_factor: 1.0
+weight_decay: 0.00001
+
+scheduler: null
+
+epoch: 100
+gpus: [0, 1]
+
+# loss
+criterion: gdlt_loss
+criterion_args:
+  alpha: 1.0
+  margin: 1.0

@@ -327,6 +327,7 @@ class HGCN(nn.Module):
         return mu, std, esp
 
     def forward(self, x):
+
         x = x.transpose(1, 2)
 
         shot = self.shot_gen(x)

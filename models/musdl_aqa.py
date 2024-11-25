@@ -24,6 +24,10 @@ class MUSDL_AQA(AQA):
             self.args.judge_min if hasattr(self.args, "judge_min") else None
         )
 
+        if self.norm_score:
+            self.label_max = 1
+            self.label_min = 0
+
         self.model_type = "MUSDL" if args.head_args["num_judges"] > 1 else "USDL"
         output_dims = {"USDL": 101, "MUSDL": 21}
         self.output_dim = output_dims[self.model_type]
@@ -65,11 +69,16 @@ class MUSDL_AQA(AQA):
         return pred
 
     def forward(self, batch_data):
+
+        if self.norm_score:
+            self.normalize(batch_data)
+
         video, label = batch_data["video"], batch_data["score"]
         soft_label = self.label2soft(batch_data)
 
         features = self.get_clip_features(video)
         h = self.neck(features)
+
         pred_soft_label = self.head(h)
         pred = self.soft2label(pred_soft_label, batch_data)
 
@@ -79,5 +88,8 @@ class MUSDL_AQA(AQA):
             "loss_preds": pred_soft_label,
             "loss_labels": soft_label,
         }
+
+        if self.norm_score:
+            self.denormalize(outputs)
 
         return outputs

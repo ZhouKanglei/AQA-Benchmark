@@ -1,0 +1,58 @@
+# data
+dataset: fisv
+data_root: /home/contlrn/zkl/Data/AQA/VST/fis-v/swintx_avg_fps25_clip32
+train_split: /home/contlrn/zkl/Data/AQA/VST/fis-v/train.txt
+test_split: /home/contlrn/zkl/Data/AQA/VST/fis-v/test.txt
+
+clip_num: 68
+class_idx: 2
+norm_score: True
+score_range: 25
+
+seed: 0
+
+# dataloader
+train_batch_size_per_gpu: 32
+test_batch_size_per_gpu: 1
+num_workers: 4
+
+# model
+model: cofinal_aqa
+
+backbone: null
+backbone_args: null
+
+neck: null
+neck_args: null
+
+head: cofinal
+head_args: 
+  n_decoder: 2
+  n_query: 4
+  n_head: 7
+  using_neg: True
+  dropout: 0.3
+  first_etf_num: 100
+  etf_vec_dim: 100
+  hidden_dim: 448
+  activate_type: 3
+
+# training
+optimizer: sgd
+base_lr: 0.01
+lr_factor: 1.0
+weight_decay: 0.0001
+momentum: 0.9
+
+scheduler: cos
+
+epoch: 200
+gpus: [0, 1]
+
+
+# loss
+criterion: cofinal_loss
+criterion_args:
+  alpha: 0.5
+  margin: 1.0
+  loss_align: 1

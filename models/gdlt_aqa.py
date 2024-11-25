@@ -5,9 +5,12 @@
 
 from .aqa import AQA
 
+
 class GDLT_AQA(AQA):
 
     def forward(self, batch_data):
+        if self.norm_score:
+            self.normalize(batch_data)
         video, label = batch_data["video"], batch_data["score"]
 
         features = self.get_clip_features(video)
@@ -24,5 +27,8 @@ class GDLT_AQA(AQA):
             "loss_labels": label,
             "q1": q1,
         }
+
+        if self.norm_score:
+            self.denormalize(outputs)
 
         return outputs

@@ -1,0 +1,74 @@
+├── AQA-7
+│   ├── AQA-7.zip
+│   ├── Split_4
+│   │   ├── split_4_test_list.mat
+│   │   ├── split_4_train_list.mat
+│   │   ├── diving_test_label.npy
+│   │   ├── diving_test_label_soft.npy
+│   │   ├── diving_train_label.npy
+│   │   └── diving_train_label_soft.npy
+│   └── data
+│       ├── diving-out
+│       ├── gym_vault-out
+│       ├── snowboard_big_air-out
+│       ├── snowboard_big_air-out
+│       ├── Split_4
+│       │   ├── diving_test_label_soft.npy
+│       │   ├── split_4_train_list.mat
+│       │   ├── diving_train_label_soft.npy
+│       │   ├── diving_test_label.npy
+│       │   ├── split_4_test_list.mat
+│       │   └── diving_train_label.npy
+│       ├── sync_diving_10m-out
+│       └── sync_diving_3m-out
+├── FineDiving
+│   ├── Annotations
+│   │   ├── fine-grained_annotation_aqa.pkl
+│   │   ├── FineDiving_fine-grained_annotation.pkl
+│   │   ├── Sub_action_Types_Table.pkl
+│   │   ├── train_split.pkl
+│   │   ├── FineDiving_coarse_annotation.pkl
+│   │   └── test_split.pkl
+│   └── FINADiving_MTL_256s
+├── MTL-AQA
+│   ├── new
+│   └── info
+│       ├── test_split_0.pkl
+│       ├── train_split_0.pkl
+│       ├── final_annotations_dict_with_dive_number.pkl
+│       └── augmented_final_annotations_dict.pkl
+├── I3D
+│   ├── fis-v
+│   │   ├── swintx_avg_fps25_clip32
+│   │   │   ├── *.npy
+│   │   ├── train.txt
+│   │   └── test.txt
+│   ├── Fis-Vswintx_avg_fps25_clip32.zip
+│   ├── RG
+│   │   ├── swintx_avg_fps25_clip32
+│   │   │   ├── *.npy
+│   │   ├── train.txt
+│   │   └── test.txt
+│   └── RG_swintx_avg_fps25_clip32.zip
+├── VST
+│   ├── fis-v
+│   │   ├── swintx_avg_fps25_clip32
+│   │   │   ├── *.npy
+│   │   ├── train.txt
+│   │   ├── fis-v.zip
+│   │   ├── swintx_avg_fps25_clip32_old
+│   │   │   ├── *.npy
+│   │   └── test.txt
+│   └── RG
+│       ├── swintx_avg_fps25_clip32
+│       │   ├── *.npy
+│       ├── train.txt
+│       └── test.txt
+└── LOGO
+    ├── info
+    │   ├── anno_dict.pkl
+    │   ├── formation_dict.pkl
+    │   ├── test_split3.pkl
+    │   └── train_split3.pkl
+    └── logo_feats
+        ├── *.npy

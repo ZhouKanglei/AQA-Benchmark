@@ -1,0 +1,45 @@
+# data
+dataset: logo
+data_root: /home/contlrn/zkl/Data/AQA/LOGO/logo_feats
+label_path: /home/contlrn/zkl/Data/AQA/LOGO/info/anno_dict.pkl
+formation_path: /home/contlrn/zkl/Data/AQA/LOGO/info/formation_dict.pkl
+train_split: /home/contlrn/zkl/Data/AQA/LOGO/info/train_split3.pkl
+test_split: /home/contlrn/zkl/Data/AQA/LOGO/info/test_split3.pkl
+
+# dataloader
+train_batch_size_per_gpu: 4
+test_batch_size_per_gpu: 1
+num_workers: 4
+
+std: 5
+
+label_max: 100.0
+label_min: 0.0
+
+# model
+model: musdl_aqa
+
+backbone: null
+backbone_args: null
+
+neck: avg
+neck_args: null
+
+head: musdl
+head_args:
+  num_judges: 1 # 1 for USDL, 7 for MUSDL
+
+# training
+optimizer: adam
+base_lr: 0.0001
+lr_factor: 1.0
+weight_decay: 0.0001
+
+scheduler: null
+
+epoch: 100
+gpus: [0, 1]
+
+
+# loss
+criterion: kld

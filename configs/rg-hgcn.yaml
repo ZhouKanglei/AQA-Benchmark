@@ -5,7 +5,7 @@ train_split: /home/contlrn/zkl/Data/AQA/VST/RG/train.txt
 test_split: /home/contlrn/zkl/Data/AQA/VST/RG/test.txt
 
 clip_num: 68
-class_idx: 1
+test_clip_fixed: True
 score_type: Total_Score
 
 # dataloader
@@ -14,22 +14,18 @@ test_batch_size_per_gpu: 1
 num_workers: 4
 
 # model
-model: core_aqa
+model: aqa
 
 backbone: null
 backbone_args: null
 
-neck: avg
+neck: null
 neck_args: null
 
-head: core
+head: hgcn
 head_args: 
-  in_channel: 2049
-  hidden_channel: 256
-  depth: 5
-
-score_range: 30
-voter_number: 10
+  num_groups: 1
+  num_clips: 68
 
 # training
 optimizer: adam
@@ -38,11 +34,11 @@ lr_factor: 1.0
 weight_decay: 0.0001
 momentum: 0.8
 
-scheduler: cos
+scheduler: null
 
 epoch: 100
 gpus: [0, 1]
 fix_bn: False
 
 # loss
-criterion: kld
+criterion: mse

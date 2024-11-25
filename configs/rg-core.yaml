@@ -1,15 +1,18 @@
 # data
-dataset: rg
+dataset: rg_pair
 data_root: /home/contlrn/zkl/Data/AQA/VST/RG/swintx_avg_fps25_clip32
 train_split: /home/contlrn/zkl/Data/AQA/VST/RG/train.txt
 test_split: /home/contlrn/zkl/Data/AQA/VST/RG/test.txt
 
 clip_num: 68
-class_idx: 1
+test_clip_fixed: True
 score_type: Total_Score
 
+score_range: 25
+voter_number: 10
+
 # dataloader
-train_batch_size_per_gpu: 32
+train_batch_size_per_gpu: 4
 test_batch_size_per_gpu: 1
 num_workers: 4
 
@@ -28,9 +31,6 @@ head_args:
   hidden_channel: 256
   depth: 5
 
-score_range: 30
-voter_number: 10
-
 # training
 optimizer: adam
 base_lr: 0.0001
@@ -38,11 +38,11 @@ lr_factor: 1.0
 weight_decay: 0.0001
 momentum: 0.8
 
-scheduler: cos
+scheduler: null
 
 epoch: 100
 gpus: [0, 1]
 fix_bn: False
 
 # loss
-criterion: kld
+criterion: nll_mse

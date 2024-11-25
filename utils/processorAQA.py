@@ -42,11 +42,12 @@ class ProcessorAQA(Processor):
                 loss = self.criterion(outputs)
                 loss.backward()
                 self.optimizer.step()
-                # self.scheduler.step()
 
                 evaluator.add_data(outputs)
                 progress_bar.prog(i, len(self.train_loader), epoch, loss.item())
 
+            if self.scheduler is not None:
+                self.scheduler.step()
             # calculate metrics for training set
             evaluator.calculate_metrics()
             self.logger.info(

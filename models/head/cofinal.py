@@ -53,6 +53,24 @@ def etf(in_channels, num_classes, normal=False):
     return etf_vec, etf_rect
 
 
+def choose_activate(n_query, type_id=1):
+    activations = {
+        0: (torch.linspace(0, 1, n_query), torch.linspace(0, 1, n_query).flip(-1)),
+        1: (
+            torch.linspace(0, 1, n_query + 1)[1:],
+            torch.linspace(0, 1, n_query + 1)[1:].flip(-1),
+        ),
+        2: (torch.tensor([0.1, 0.2, 0.8, 1]), torch.tensor([1, 1, -1, -1])),
+        3: (
+            torch.tensor([-1, -0.8, 0.8, 1]),
+            torch.tensor([-1, -0.8, 0.8, 1]).flip(-1),
+        ),
+    }
+    return activations.get(
+        type_id, (torch.linspace(0, 1, n_query), torch.linspace(0, 1, n_query))
+    )
+
+
 class COFINAL(nn.Module):
     def __init__(
         self,
@@ -66,9 +84,17 @@ class COFINAL(nn.Module):
         score_range=1,
         etf_vec_dim=128,
         first_etf_num=10,
-        second_etf_num=50,
+        second_etf_num=0,  # not used
+        using_neg=True,
+        key_len=1,
+        activate_type=1,
     ):
         super(COFINAL, self).__init__()
+        self.score_range = score_range
+        self.using_neg = using_neg
+        self.first_etf_num = first_etf_num
+
+        # in_proj part
         self.in_proj = nn.Sequential(
             nn.Conv1d(kernel_size=1, in_channels=in_dim, out_channels=in_dim // 2),
             nn.BatchNorm1d(in_dim // 2),
@@ -87,62 +113,51 @@ class COFINAL(nn.Module):
             dropout=dropout,
         )
 
-        # the original regression head from GDLT
-        self.eval_classes = n_query
         self.prototype = nn.Embedding(n_query, hidden_dim)
+        # query weight activation
+        we = choose_activate(n_query, activate_type)
+        # positive part
         self.regressor = nn.Linear(hidden_dim, n_query)
-        self.regressor_neg = nn.Linear(hidden_dim, n_query)
+        self.weight = we[0] * score_range
+        if using_neg:
+            # negative part: score_range minus positive part
+            self.regressor_neg = nn.Linear(hidden_dim, n_query)
+            self.weight_neg = we[1] * score_range
 
-        # score interval
-        self.weight = torch.linspace(0, score_range, n_query)
-        self.weight_neg = torch.linspace(0, score_range, n_query)
-        # initialize a learnable penalty weight: the penalty weight is used to penalize the negative part
-        self.penalty_weight = nn.Parameter(torch.tensor(0.0))
-
-        # etf head
-        self.score_range_1 = score_range
-        self.score_range_2 = score_range / first_etf_num
-        self.score_range_3 = score_range / first_etf_num / second_etf_num
-
-        # first level etf is used to generate the coarse-grained score
-        self.first_etf_num = first_etf_num
+        # etf part
         etf_vec1, _ = etf(etf_vec_dim, first_etf_num)
         self.register_buffer("etf_vec1", etf_vec1)
 
-        # second level etf is used to generate the fine-grained score
-        self.second_etf_num = second_etf_num
-        etf_vec2, _ = etf(etf_vec_dim, second_etf_num)
-        self.register_buffer("etf_vec2", etf_vec2)
+        self.key_len = key_len
 
-        # two level etf heads
+        # etf head
         self.regressori = nn.ModuleList()
         self.regi = nn.ModuleList()
-        for _ in range(2):
+        for _ in range(key_len):
+            self.regressori.append(
+                nn.Sequential(
+                    nn.Flatten(),
+                    nn.Linear(n_query * hidden_dim, hidden_dim),
+                    nn.Linear(hidden_dim, etf_vec_dim),
+                )
+            )
+
             self.regi.append(
                 torch.nn.MultiheadAttention(
                     embed_dim=hidden_dim, num_heads=4, dropout=dropout
                 ),
             )
 
-            self.regressori.append(
-                nn.Sequential(
-                    nn.Flatten(),
-                    nn.Linear(4 * hidden_dim, etf_vec_dim),
-                )
-            )
-
     def forward(self, x):
 
-        self.weight = self.weight.to(x.device)
-        self.weight_neg = self.weight_neg.to(x.device)
-
+        # x (b, t, c)
         result = {
             "pos_s": None,
             "neg_s": None,
+            "score": None,
             "etf_feat": [],
         }
 
-        # x (b, t, c)
         b, t, c = x.shape
         x = self.in_proj(x.transpose(1, 2)).transpose(1, 2)
 
@@ -150,33 +165,29 @@ class COFINAL(nn.Module):
         encode_x = self.transformer.encoder(x)
         q1 = self.transformer.decoder(q, encode_x)  # torch.Size([32, 4, 256])
 
-        # score regressor 1: positive part - negative part
-        # positive score regressor: action reponses for the positive part
+        self.weight = self.weight.to(x.device)
         s = self.regressor(q1)
         out = self.gen_score(s, self.weight, b)
         result["pos_s"] = out
 
-        # negative score regressor (optional): action reponses for the negative part
-        s1 = self.regressor_neg(q1)
-        out = self.gen_score(s1, self.weight_neg, b)
-        result["neg_s"] = out
+        if self.using_neg:
+            self.weight_neg = self.weight_neg.to(x.device)
+            s1 = self.regressor_neg(q1)
+            out = self.gen_score(s1, self.weight_neg, b)
+            result["neg_s"] = out
 
-        # score classification 2: etf part
-        # etf head: action reponses for the whole part
-        for i in range(2):
+        for i in range(self.key_len):
             s_dec, _ = self.regi[i](q1, q1, q1)
             s_dec = self.regressori[i](s_dec)
             norm_d = self.norm_logits(s_dec)
             result["etf_feat"].append(norm_d)
 
-        # final score: (positive part - negative part + etf part) / 2
-        # the mixture of the positive part, negative part, and etf part provides a more robust score
         result["score"] = self.gen_final_score(result)
 
         return {"output": result, "embed": q1}
 
     def gen_score(self, s, weight, b):
-        s = torch.diagonal(s, dim1=-2, dim2=-1)  # (b, n, n) -> (b, n)
+        s = torch.diagonal(s, dim1=-2, dim2=-1)  # (b, n) torch.Size([32, 4, 4])
         norm_s = torch.sigmoid(s)
         norm_s = norm_s / torch.sum(norm_s, dim=1, keepdim=True)
         out = torch.sum(weight.unsqueeze(0).repeat(b, 1) * norm_s, dim=1)
@@ -188,43 +199,41 @@ class COFINAL(nn.Module):
 
     def re_proj(self, x):
         return torch.argmax(x, dim=-1)
+        # return torch.argmax(x)
 
-    def get_proj_class(self, gt_label):
+    def get_proj_class(self, gt_label1):
+        gt_label = (gt_label1 * 100 * self.first_etf_num).long()
+        g_2 = gt_label - gt_label // 100 * 100
 
-        g_1 = torch.floor(gt_label / self.score_range_1 * self.first_etf_num)
-        g_2_score = gt_label - g_1 / self.first_etf_num * self.score_range_1
-        g_2 = torch.floor(g_2_score / self.score_range_2)
+        target_1 = self.etf_vec1[:, g_2].t()
 
-        g_1 = g_1.long()
-        g_2 = g_2.long()
+        return (target_1,)
 
-        target_1 = self.etf_vec1[:, g_1].t()
-        target_2 = self.etf_vec2[:, g_2].t()
+    def gen_label_score(self, gt_label1):
+        gt_label = (gt_label1 * 100 * self.first_etf_num).long()
 
-        target = (target_1, target_2)
+        g_1 = gt_label // 100 / self.first_etf_num
 
-        return target
+        if self.using_neg:
+            return (gt_label1, g_1, self.score_range - g_1)
+        else:
+            return (gt_label1, g_1)
 
     def gen_final_score(self, x):
+        # the first part is the positive part plus the negative part
+        if self.using_neg:
+            score1 = (x["pos_s"] + self.score_range - x["neg_s"]) / 2
+        else:
+            score1 = x["pos_s"]
 
+        # the second part is the etf part
         first_dict = x["etf_feat"][0] @ self.etf_vec1
-        second_dict = x["etf_feat"][1] @ self.etf_vec2
         first_c = self.re_proj(first_dict)
-        second_c = self.re_proj(second_dict)
 
-        first_s = first_c * self.score_range_2
-        second_s = second_c * self.score_range_3
+        # final score： score1 accounts for the first two decimal places
+        score = score1 + first_c / 100 / self.first_etf_num
 
-        score1 = x["pos_s"] + x["neg_s"] * self.penalty_weight
-        score2 = first_s + second_s
-
-        score = (score1 + score2) / 2
-
-        if len(score.shape) > 1:
-            score = score.squeeze()
-        if len(score1.shape) > 1:
-            score1 = score1.squeeze()
-        if len(score2.shape) > 1:
-            score2 = score2.squeeze()
-
-        return score, score1, score2
+        if self.using_neg:
+            return (score, x["pos_s"], x["neg_s"])
+        else:
+            return (score, x["pos_s"])

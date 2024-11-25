@@ -21,4 +21,7 @@ from .head.dae import DAE as dae
 from .head.hgcn import HGCN as hgcn
 from .head.core import CORE as core
 from .head.gdlt import GDLT as gdlt
+
 from .head.cofinal import COFINAL as cofinal
+
+# from .head.cofinal_old import cofinal as cofinal

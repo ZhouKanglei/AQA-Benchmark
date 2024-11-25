@@ -92,15 +92,19 @@ class Processor(object):
 
         # work directory: outputs + dataset + experiment name
         self.config_name = os.path.basename(self.args.config).split(".")[0]
-        if "seven" in self.config_name:
-            self.config_name = self.config_name.replace(
-                "seven", f"seven{self.args.class_idx}"
-            )
-        else:
-            self.config_name = self.config_name + f"_{self.args.class_idx}"
-
+        dataset = self.args.dataset.replace("_pair", "")
+        if dataset in ["seven", "rg", "fisv"]:
+            if (
+                dataset in self.config_name
+                and f"{dataset}{self.args.class_idx}" not in self.config_name
+            ):
+                self.config_name = self.config_name.replace(
+                    dataset, f"{dataset}{self.args.class_idx}"
+                )
+            elif f"{dataset}{self.args.class_idx}" not in self.config_name:
+                self.config_name = self.config_name + f"_{self.args.class_idx}"
+        # work directory
         self.work_dir = f"{self.args.output_dir}/{self.config_name}/{self.exp_name}"
-
         os.makedirs(self.work_dir, exist_ok=True)
 
         # weight save directory
@@ -183,18 +187,24 @@ class Processor(object):
         """
 
         self.logger.info("Build model:", level=1)
-        self.logger.info(
-            f"- Backbone: {self.args.backbone:6s} with args {self.args.backbone_args}"
-        )
+        if self.args.backbone is not None:
+            self.logger.info(
+                f"- Backbone: {self.args.backbone:6s} with args {self.args.backbone_args}"
+            )
+        else:
+            self.logger.info(f"- Backbone: None")
         if self.args.neck is not None:
             self.logger.info(
                 f"-     Neck: {self.args.neck:6s} with args {self.args.neck_args}"
             )
+        else:
+            self.logger.info(f"-     Neck: None")
         self.logger.info(
             f"-     Head: {self.args.head:6s} with args {self.args.head_args}"
         )
 
-        self.args.backbone_args["logger"] = self.logger
+        if self.args.backbone_args is not None:
+            self.args.backbone_args["logger"] = self.logger
         model = locate("models." + self.args.model)
         self.model = model(self.args)
 
@@ -277,11 +287,12 @@ class Processor(object):
 
         self.logger.info(f"- Scheduler: {self.args.scheduler}")
 
+        if hasattr(self.model, "module"):
+            model = self.model.module
+        else:
+            model = self.model
+
         if self.args.optimizer == "adam":
-            if hasattr(self.model, "module"):
-                model = self.model.module
-            else:
-                model = self.model
             self.optimizer = torch.optim.Adam(
                 [
                     {
@@ -292,17 +303,31 @@ class Processor(object):
                     {"params": model.head.parameters()},
                 ],
                 lr=self.args.base_lr,
-                weight_decay=int(self.args.weight_decay),
+                weight_decay=float(self.args.weight_decay),
+            )
+        elif self.args.optimizer == "sgd":
+            self.optimizer = torch.optim.SGD(
+                [
+                    {
+                        "params": model.backbone.parameters(),
+                        "lr": self.args.base_lr * self.args.lr_factor,
+                    },
+                    {"params": model.neck.parameters()},
+                    {"params": model.head.parameters()},
+                ],
+                lr=self.args.base_lr,
+                weight_decay=float(self.args.weight_decay),
+                momentum=self.args.momentum,
             )
         else:
             raise NotImplementedError()
 
-        self.scheduler = torch.optim.lr_scheduler.OneCycleLR(
-            self.optimizer,
-            max_lr=[0.0091, 0.001, 0.001],
-            total_steps=self.args.epoch * len(self.train_loader),
-            verbose=False,
-        )
+        if self.args.scheduler == "cos":
+            self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+                self.optimizer, T_max=self.args.epoch, eta_min=self.args.base_lr * 0.01
+            )
+        else:
+            self.scheduler = None
 
     def build_criterion(self):
         """

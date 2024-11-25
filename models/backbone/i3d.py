@@ -274,7 +274,8 @@ class I3D(torch.nn.Module):
         out = self.mixed_5c(out)
         output["out3"] = out
 
-        feature = self.avg_pool(out)
+        feature = F.adaptive_avg_pool3d(out, (1, 1, 1))
+        # feature = self.avg_pool(out)
         output["feature"] = feature
 
         self.output = output
