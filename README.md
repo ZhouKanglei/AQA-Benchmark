@@ -89,6 +89,6 @@ We welcome contributions! Please fork the repository and submit a pull request w
 
 ## 📞 Contact Us
 
-For any questions or issues, please open an issue on GitHub or reach out to us via email at [z h o u k a n g l e i {at} q q .c om ](mailto:zkl@qq.com) (Please remove the spaces in the email address before sending your message).
+For any questions or issues, please open an issue on GitHub or reach out to us via email at [z h o u k a n g l e i {at} q q . c o m](mailto:zkl@qq.com) (Please remove the spaces in the email address before sending your message).
 
 Happy benchmarking!
