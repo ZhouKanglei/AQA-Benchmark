@@ -37,7 +37,7 @@ head_args:
 optimizer: adam
 base_lr: 0.0001
 lr_factor: 1.0
-weight_decay: 0.00001
+weight_decay: 0.0001
 
 scheduler: null
 

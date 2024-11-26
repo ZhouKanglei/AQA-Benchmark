@@ -8,7 +8,7 @@ clip_num: 68
 score_type: Total_Score
 
 # dataloader
-train_batch_size_per_gpu: 32
+train_batch_size_per_gpu: 4
 test_batch_size_per_gpu: 1
 num_workers: 4
 

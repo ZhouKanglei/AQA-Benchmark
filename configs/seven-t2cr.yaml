@@ -1,3 +1,4 @@
+
 # data
 dataset: seven_pair
 data_root: /home/contlrn/zkl/Data/AQA/AQA-7
@@ -9,35 +10,31 @@ temporal_shift: [-3, 3]
 
 score_range: 100
 class_idx: 1
-
 voter_number: 10
 
 # dataloader
-train_batch_size_per_gpu: 2
-test_batch_size_per_gpu: 2
+train_batch_size_per_gpu: 1
+test_batch_size_per_gpu: 1
 num_workers: 4
 
 # model
-model: core_aqa
+model: t2cr_aqa
 
 backbone: i3d
 backbone_args:
   pretrained_path: weights/model_rgb.pth
 
-neck: avg
+neck: null
 neck_args: null
 
-head: core
-head_args: 
-  in_channel: 2049
-  hidden_channel: 256
-  depth: 5
+head: t2cr
+head_args: null # default
 
 # training
 optimizer: adam
 base_lr: 0.0001
 lr_factor: 1.0
-weight_decay: 0.00001
+weight_decay: 0.0001
 
 scheduler: null
 
@@ -46,4 +43,4 @@ gpus: [0, 1]
 fix_bn: True
 
 # loss
-criterion: nll_mse
+criterion: t2cr_loss

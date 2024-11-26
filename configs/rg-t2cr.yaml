@@ -1,12 +1,15 @@
 # data
-dataset: fisv
-data_root: /home/contlrn/zkl/Data/AQA/VST/fis-v/swintx_avg_fps25_clip32
-train_split: /home/contlrn/zkl/Data/AQA/VST/fis-v/train.txt
-test_split: /home/contlrn/zkl/Data/AQA/VST/fis-v/test.txt
+dataset: rg_pair
+data_root: /home/contlrn/zkl/Data/AQA/VST/RG/swintx_avg_fps25_clip32
+train_split: /home/contlrn/zkl/Data/AQA/VST/RG/train.txt
+test_split: /home/contlrn/zkl/Data/AQA/VST/RG/test.txt
 
 clip_num: 68
 test_clip_fixed: True
 score_type: Total_Score
+
+score_range: 25
+voter_number: 10
 
 # dataloader
 train_batch_size_per_gpu: 4
@@ -14,18 +17,18 @@ test_batch_size_per_gpu: 1
 num_workers: 4
 
 # model
-model: aqa
+model: t2cr_aqa
 
 backbone: null
 backbone_args: null
 
 neck: null
-neck_args: null
+neck_args: null # default
 
-head: hgcn
+head: t2cr
 head_args: 
-  num_groups: 1
-  num_clips: 68
+  thin_dim: 34 # half num of clips
+  full_dim: 68 # num of clips
 
 # training
 optimizer: adam
@@ -41,4 +44,4 @@ gpus: [0, 1]
 fix_bn: False
 
 # loss
-criterion: mse
+criterion: t2cr_loss

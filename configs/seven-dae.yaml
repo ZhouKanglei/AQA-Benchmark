@@ -1,15 +1,15 @@
 
 # data
-dataset: mtl
-data_root: /home/contlrn/zkl/Data/AQA/MTL-AQA/new
-label_path: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/augmented_final_annotations_dict.pkl
-train_split: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/train_split_0.pkl
-test_split: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/test_split_0.pkl
+dataset: seven
+data_root: /home/contlrn/zkl/Data/AQA/AQA-7
+train_split: /home/contlrn/zkl/Data/AQA/AQA-7/Split_4/split_4_train_list.mat
+test_split: /home/contlrn/zkl/Data/AQA/AQA-7/Split_4/split_4_test_list.mat
 
 frame_length: 103
 temporal_shift: [-3, 3]
 
-usingDD: True
+score_range: 100
+class_idx: 1
 
 # dataloader
 train_batch_size_per_gpu: 4

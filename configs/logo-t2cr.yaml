@@ -1,11 +1,13 @@
 # data
-dataset: logo
+dataset: logo_pair
 data_root: /home/contlrn/zkl/Data/AQA/LOGO/logo_feats
 label_path: /home/contlrn/zkl/Data/AQA/LOGO/info/anno_dict.pkl
 formation_path: /home/contlrn/zkl/Data/AQA/LOGO/info/formation_dict.pkl
 train_split: /home/contlrn/zkl/Data/AQA/LOGO/info/train_split3.pkl
 test_split: /home/contlrn/zkl/Data/AQA/LOGO/info/test_split3.pkl
 
+voter_number: 10
+score_range: 100
 
 # dataloader
 train_batch_size_per_gpu: 4
@@ -13,7 +15,7 @@ test_batch_size_per_gpu: 1
 num_workers: 4
 
 # model
-model: aqa
+model: t2cr_aqa
 
 backbone: null
 backbone_args: null
@@ -21,10 +23,10 @@ backbone_args: null
 neck: null
 neck_args: null
 
-head: hgcn
+head: t2cr
 head_args: 
-  num_groups: 1
-  num_clips: 48
+  thin_dim: 24 # half num of clips
+  full_dim: 48 # num of clips
 
 # training
 optimizer: adam
@@ -40,4 +42,4 @@ gpus: [0, 1]
 fix_bn: False
 
 # loss
-criterion: mse
+criterion: t2cr_loss

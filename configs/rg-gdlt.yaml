@@ -29,7 +29,7 @@ head_args:
   n_encoder: 1
   n_decoder: 2
   n_query: 4
-  score_range: 30 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
+  score_range: 25 # if usingDD is True, this should be 30, else 104.5 for MTL-AQA
 
 # training
 optimizer: adam

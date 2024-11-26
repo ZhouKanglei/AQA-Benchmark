@@ -9,6 +9,9 @@ test_split: /home/contlrn/zkl/Data/AQA/MTL-AQA/info/test_split_0.pkl
 frame_length: 103
 temporal_shift: [-3, 3]
 
+score_range: 30
+voter_number: 10
+
 usingDD: True
 dive_number_choosing: False
 
@@ -32,9 +35,6 @@ head_args:
   in_channel: 2049
   hidden_channel: 256
   depth: 5
-
-score_range: 30
-voter_number: 10
 
 # training
 optimizer: adam

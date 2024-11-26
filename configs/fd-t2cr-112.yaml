@@ -1,0 +1,51 @@
+# data
+dataset: fd_pair
+data_root: /home/contlrn/zkl/Data/AQA/FineDiving/FINADiving_MTL_256s
+label_path: /home/contlrn/zkl/Data/AQA/FineDiving/Annotations/fine-grained_annotation_aqa.pkl
+train_split: /home/contlrn/zkl/Data/AQA/FineDiving/Annotations/train_split.pkl
+test_split: /home/contlrn/zkl/Data/AQA/FineDiving/Annotations/test_split.pkl
+
+frame_length: 96
+resolution: 112
+
+frame_length: 103
+temporal_shift: [-3, 3]
+
+score_range: 30
+voter_number: 10
+
+usingDD: True
+dive_number_choosing: True
+
+# dataloader
+train_batch_size_per_gpu: 1
+test_batch_size_per_gpu: 1
+num_workers: 4
+
+# model
+model: t2cr_aqa
+
+backbone: i3d
+backbone_args:
+  pretrained_path: weights/model_rgb.pth
+
+neck: null
+neck_args: null
+
+head: t2cr
+head_args: null # default
+
+# training
+optimizer: adam
+base_lr: 0.0001
+lr_factor: 1.0
+weight_decay: 0.0001
+
+scheduler: null
+
+epoch: 100
+gpus: [0, 1]
+fix_bn: True
+
+# loss
+criterion: t2cr_loss

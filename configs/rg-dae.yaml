@@ -1,11 +1,10 @@
 # data
-dataset: fisv
-data_root: /home/contlrn/zkl/Data/AQA/VST/fis-v/swintx_avg_fps25_clip32
-train_split: /home/contlrn/zkl/Data/AQA/VST/fis-v/train.txt
-test_split: /home/contlrn/zkl/Data/AQA/VST/fis-v/test.txt
+dataset: rg
+data_root: /home/contlrn/zkl/Data/AQA/VST/RG/swintx_avg_fps25_clip32
+train_split: /home/contlrn/zkl/Data/AQA/VST/RG/train.txt
+test_split: /home/contlrn/zkl/Data/AQA/VST/RG/test.txt
 
 clip_num: 68
-test_clip_fixed: True
 score_type: Total_Score
 
 # dataloader
@@ -19,17 +18,15 @@ model: aqa
 backbone: null
 backbone_args: null
 
-neck: null
+neck: avg
 neck_args: null
 
-head: hgcn
-head_args: 
-  num_groups: 1
-  num_clips: 68
+head: dae
+head_args: null
 
 # training
 optimizer: adam
-base_lr: 0.0001
+base_lr: 0.001
 lr_factor: 1.0
 weight_decay: 0.0001
 momentum: 0.8
